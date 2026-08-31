@@ -17,38 +17,38 @@ st.markdown("""
             margin-bottom: 8px !important;
         }
         
-        /* --- FREEZE TABLE SIZE FOR SMALL SCREENS --- */
-        /* Wrap your main content or table areas to lock minimum layout width at 768px */
+        /* --- FORCE HORIZONTAL SCROLL & PREVENT COLUMN WRAP ON MOBILE --- */
         .block-container {
             max-width: 100% !important;
         }
         
-        /* Create a scrollable viewport container for tables on smaller screens */
+        /* Enable horizontal scrolling on the main container */
         @media (max-width: 768px) {
             .stMainBlockContainer, [data-testid="stMainBlockContainer"] {
                 overflow-x: auto !important;
             }
         }
 
-        /* Force table blocks to maintain their desktop proportions */
-        div[data-testid="stVerticalBlock"] > div:has([data-testid="stHorizontalBlock"]) {
-            min-width: 768px !important;
-        }
-        
-        /* Tighten horizontal blocks alignment */
+        /* Prevent Streamlit columns from stacking vertically on small screens */
         [data-testid="stHorizontalBlock"] {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            min-width: 768px !important;
             gap: 0.4rem !important;
             padding-top: 0px !important;
             padding-bottom: 0px !important;
-            min-width: 768px !important;
         }
 
-        /* --- ABSOLUTE VERTICAL ALIGNMENT FIX FOR BUTTONS VS TEXT --- */
+        /* Prevent individual columns from collapsing or auto-widthing */
         [data-testid="column"] {
+            flex: 1 0 auto !important;
+            min-width: fit-content !important;
             display: flex;
             align-items: center;
         }
-        
+
+        /* --- ABSOLUTE VERTICAL ALIGNMENT FIX FOR BUTTONS VS TEXT --- */
         div[data-testid="stMarkdownContainer"] {
             width: 100%;
         }
