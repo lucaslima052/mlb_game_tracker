@@ -98,6 +98,7 @@ st.markdown("""
         hr {
             margin-top: 2px !important;
             margin-bottom: 4px !important;
+            min-width: 530px !important
         }
     </style>
 """, unsafe_allow_html=True)
@@ -407,6 +408,7 @@ def render_batters(title, player_ids, team_data):
     cols[2].write("**sOPS**")
     cols[3].write("**rOPS**")
     cols[4].write("**Trend**")
+    cols[5].write("**Detail**")
     st.divider()
 
     for i, pid in enumerate(player_ids):
@@ -525,6 +527,7 @@ def render_pitchers(title, player_ids, team_data):
     cols[2].write("**sERA**")
     cols[3].write("**rERA**")
     cols[4].write("**Trend**")
+    cols[5].write("**Detail**")
     st.divider()
 
     for pid in player_ids:
