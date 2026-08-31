@@ -661,6 +661,36 @@ def render_pitchers(title, player_ids, team_data):
         if cols[5].button("Stats", key=f"btn_pit_{pid}_{title}"):
             show_stats_dialog(f"#{info['jersey']} {info['name']}", df)
 
+def get_batter_sops(pid):
+    season_stats = fetch_player_season_stats(pid, "hitting")
+    try:
+        return float(season_stats.get('ops', 0.0))
+    except:
+        return 0.0
+
+def get_bullpen_sort_key(pid, team_dict):
+    # 1. Role: RP (0) comes before SP (1)
+    season_stats = fetch_player_season_stats(pid, "pitching")
+    display_pos = get_player_info(team_dict, pid).get('def_pos', 'P')
+    
+    is_starter = False
+    if display_pos == 'P':
+        gp = season_stats.get('gamesPlayed', 0)
+        gs = season_stats.get('gamesStarted', 0)
+        if gp > 0 and (gs / gp) > 0.5:
+            is_starter = True
+    elif display_pos == 'SP':
+        is_starter = True
+        
+    role_val = 1 if is_starter else 0  # 0 for RP, 1 for SP
+    
+    # 2. Season ERA (default to a high number if missing so they sort last)
+    try:
+        era = float(season_stats.get('era', 999.0))
+    except:
+        era = 999.0
+        
+    return (role_val, era)
 
 def render_team_tab(team_dict):
     batting_order = team_dict.get('battingOrder', [])
@@ -687,7 +717,9 @@ def render_team_tab(team_dict):
     render_batters("Current Lineup", batting_order, team_dict)
     
     if bench:
-        render_batters("Bench", bench, team_dict)
+        # Sort bench batters by Season OPS (sOPS) descending (highest first)
+        sorted_bench = sorted(bench, key=lambda pid: get_batter_sops(pid), reverse=True)
+        render_batters("Bench", sorted_bench, team_dict)
         
     if batters_left_game:
         render_batters("Batters - Left Game", batters_left_game, team_dict)
@@ -698,7 +730,9 @@ def render_team_tab(team_dict):
     render_pitchers("Current Pitcher", current_pitcher, team_dict)
     
     if bullpen:
-        render_pitchers("Bullpen", bullpen, team_dict)
+        # Sort bullpen: RP first (0), then SP (1), with lowest ERA first within each group
+        sorted_bullpen = sorted(bullpen, key=lambda pid: get_bullpen_sort_key(pid, team_dict))
+        render_pitchers("Bullpen", sorted_bullpen, team_dict)
         
     if pitchers_left_game:
         render_pitchers("Pitchers - Left Game", pitchers_left_game, team_dict)
