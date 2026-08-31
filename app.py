@@ -120,6 +120,20 @@ st.markdown("""
             margin-top: -10px !important;
             margin-bottom: -10px !important;
         }
+
+        /* --- REDUCE SIDEBAR TOP HEADSPACE --- */
+        section[data-testid="stSidebar"] div.stMainBlockContainer, 
+        section[data-testid="stSidebar"] .block-container {
+            padding-top: 1rem !important;
+        }
+
+        /* Pull the very first sidebar header/element up */
+        section[data-testid="stSidebar"] div[data-testid="stVerticalBlock"] > div:first-child {
+            margin-top: -30px !important;
+        }
+        section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
+            gap: 0.3rem !important;
+        }
         
     </style>
 """, unsafe_allow_html=True)
