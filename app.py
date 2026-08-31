@@ -8,7 +8,7 @@ import pandas as pd
 st.set_page_config(page_title="MLB Trend Tracker", layout="wide")
 CURRENT_SEASON = 2026 # Update this based on the current season
 
-# Custom CSS for bulletproof mobile tables
+# Custom CSS for absolute vertical centering between text and buttons
 st.markdown("""
     <style>
         /* Add clean separation between section titles and tables */
@@ -17,93 +17,50 @@ st.markdown("""
             margin-bottom: 8px !important;
         }
         
-        /* Strip default paragraph margins so text aligns center with buttons */
-        div[data-testid="stMarkdownContainer"] > p {
-            margin-bottom: 0px !important;
+        /* Tighten horizontal blocks alignment */
+        [data-testid="stHorizontalBlock"] {
+            gap: 0.4rem !important;
+            padding-top: 0px !important;
+            padding-bottom: 0px !important;
+        }
+
+        /* --- ABSOLUTE VERTICAL ALIGNMENT FIX FOR BUTTONS VS TEXT --- */
+        [data-testid="column"] {
+            display: flex;
+            align-items: center;
+        }
+        
+        div[data-testid="stMarkdownContainer"] {
+            width: 100%;
+        }
+
+        /* Remove margins from text elements to ensure precise centering */
+        p, div[data-testid="stMarkdownContainer"] > p {
             margin-top: 0px !important;
+            margin-bottom: 0px !important;
             line-height: 1.2 !important;
         }
 
-        /* Style and center stats buttons */
+        /* Force button wrapper to match text alignment baseline */
+        [data-testid="stButton"] {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        /* Make the Stats buttons compact to match text row height */
         [data-testid="stButton"] button {
             padding: 0px 6px !important;
-            min-height: 24px !important;
-            height: 26px !important;
+            min-height: 22px !important;
+            height: 28px !important;
             font-size: 0.8rem !important;
             line-height: normal !important;
         }
 
         /* Tighten divider spacing */
         hr {
-            margin-top: 4px !important;
+            margin-top: 2px !important;
             margin-bottom: 4px !important;
-        }
-
-        /* --- MOBILE LAYOUT: TRUE TABLE BEHAVIOR --- */
-        @media (max-width: 768px) {
-            
-            /* 1. UNIFIED PAGE SCROLL: Make the whole app scrollable horizontally */
-            .block-container {
-                overflow-x: auto !important;
-                padding-left: 0.5rem !important;
-                padding-right: 0.5rem !important;
-            }
-
-            /* 2. FORCE ROWS TO STAY ROWS (Override Streamlit's <576px stacking) */
-            [data-testid="stHorizontalBlock"] {
-                display: flex !important;
-                flex-direction: row !important;
-                flex-wrap: nowrap !important;
-                width: max-content !important; /* Force width to be sum of its columns */
-                min-width: 100% !important;
-                gap: 2px !important;
-                padding-bottom: 2px !important;
-            }
-            
-            /* 3. DISABLE FLEX EXPANSION: Lock columns to our exact widths */
-            [data-testid="stHorizontalBlock"] > [data-testid="column"] {
-                flex: 0 0 auto !important;
-                min-width: unset !important;
-                padding: 0px 2px !important;
-            }
-
-            /* 4. EXACT PIXEL WIDTHS FOR BATTERS (Total ~410px) */
-            [data-testid="stHorizontalBlock"]:has(:nth-child(7)) > [data-testid="column"]:nth-child(1) { width: 25px !important; }
-            [data-testid="stHorizontalBlock"]:has(:nth-child(7)) > [data-testid="column"]:nth-child(2) { width: 65px !important; }
-            [data-testid="stHorizontalBlock"]:has(:nth-child(7)) > [data-testid="column"]:nth-child(3) { width: 135px !important; }
-            [data-testid="stHorizontalBlock"]:has(:nth-child(7)) > [data-testid="column"]:nth-child(4) { width: 45px !important; }
-            [data-testid="stHorizontalBlock"]:has(:nth-child(7)) > [data-testid="column"]:nth-child(5) { width: 45px !important; }
-            [data-testid="stHorizontalBlock"]:has(:nth-child(7)) > [data-testid="column"]:nth-child(6) { width: 35px !important; }
-            [data-testid="stHorizontalBlock"]:has(:nth-child(7)) > [data-testid="column"]:nth-child(7) { width: 50px !important; }
-
-            /* EXACT PIXEL WIDTHS FOR PITCHERS (Total ~410px) */
-            [data-testid="stHorizontalBlock"]:has(:nth-child(6)):not(:has(:nth-child(7))) > [data-testid="column"]:nth-child(1) { width: 75px !important; }
-            [data-testid="stHorizontalBlock"]:has(:nth-child(6)):not(:has(:nth-child(7))) > [data-testid="column"]:nth-child(2) { width: 145px !important; }
-            [data-testid="stHorizontalBlock"]:has(:nth-child(6)):not(:has(:nth-child(7))) > [data-testid="column"]:nth-child(3) { width: 45px !important; }
-            [data-testid="stHorizontalBlock"]:has(:nth-child(6)):not(:has(:nth-child(7))) > [data-testid="column"]:nth-child(4) { width: 45px !important; }
-            [data-testid="stHorizontalBlock"]:has(:nth-child(6)):not(:has(:nth-child(7))) > [data-testid="column"]:nth-child(5) { width: 35px !important; }
-            [data-testid="stHorizontalBlock"]:has(:nth-child(6)):not(:has(:nth-child(7))) > [data-testid="column"]:nth-child(6) { width: 50px !important; }
-
-            /* 5. PREVENT TEXT OVERLAP: Force wrap for long names */
-            [data-testid="stHorizontalBlock"]:has(:nth-child(7)) > [data-testid="column"]:nth-child(3) p,
-            [data-testid="stHorizontalBlock"]:has(:nth-child(6)):not(:has(:nth-child(7))) > [data-testid="column"]:nth-child(2) p {
-                white-space: normal !important;
-                word-wrap: break-word !important;
-            }
-
-            p, span, div[data-testid="stMarkdownContainer"] p {
-                font-size: 0.75rem !important;
-            }
-
-            [data-testid="stButton"] button {
-                padding: 0px 4px !important;
-                font-size: 0.65rem !important;
-                height: 24px !important;
-                min-height: 20px !important;
-            }
-            h3 {
-                font-size: 1.1rem !important;
-            }
         }
     </style>
 """, unsafe_allow_html=True)
@@ -402,9 +359,7 @@ selected_team = st.radio("Select Team", team_list, index=default_team_idx, horiz
 def render_batters(title, player_ids, team_data):
     st.subheader(title)
     
-    # Proportional Python column ratios (desktop fallback)
     batter_col_ratios = [0.3, 0.6, 1.4, 0.6, 0.6, 0.6, 0.6]
-    #batter_col_ratios = [0.4, 1.2, 2.2, 1.0, 1.0, 0.8, 1.0]
     
     cols = st.columns(batter_col_ratios, vertical_alignment="center")
     cols[0].write("**#**")
@@ -521,7 +476,6 @@ def render_batters(title, player_ids, team_data):
 def render_pitchers(title, player_ids, team_data):
     st.subheader(title)
     
-    # Proportional Python column ratios (desktop fallback)
     pitcher_col_ratios = [1.2, 2.2, 1.0, 1.0, 0.8, 1.0]
     
     cols = st.columns(pitcher_col_ratios, vertical_alignment="center")
@@ -654,7 +608,7 @@ def render_pitchers(title, player_ids, team_data):
                 "K": r_k,
                 "HBP": r_hbp,
                 "HR %": fmt_pct(r_hr, r_bf),
-                "XBH %": fmt_pct(r_2b + r_3b + r_hr, r_pa if 'r_pa' in locals() else r_bf),
+                "XBH %": fmt_pct(r_2b + r_3b + r_hr, r_bf),
                 "BB %": fmt_pct(r_bb, r_bf),
                 "K %": fmt_pct(r_k, r_bf),
                 "WHIP": f"{r_whip:.2f}",
