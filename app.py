@@ -8,7 +8,7 @@ import pandas as pd
 st.set_page_config(page_title="MLB Trend Tracker", layout="wide")
 CURRENT_SEASON = 2026 # Update this based on the current season
 
-# Custom CSS for vertical alignment, compact rows, and responsive proportions
+# Custom CSS for vertical alignment, compact rows, and clean mobile font scaling
 st.markdown("""
     <style>
         /* Add clean separation between section titles and tables */
@@ -19,7 +19,7 @@ st.markdown("""
         /* Tighten horizontal blocks alignment and vertically center items */
         [data-testid="stHorizontalBlock"] {
             align-items: center !important;
-            gap: 0.3rem !important;
+            gap: 0.4rem !important;
             padding-top: 0px !important;
             padding-bottom: 0px !important;
         }
@@ -46,32 +46,19 @@ st.markdown("""
             margin-bottom: 0px !important;
         }
 
-        /* --- MOBILE RESPONSIVE TWEAKS (PRESERVING PROPORTIONS) --- */
+        /* --- MOBILE FONT SCALING (NATURAL LAYOUT) --- */
         @media (max-width: 768px) {
-            [data-testid="stHorizontalBlock"] {
-                flex-direction: row !important;
-                flex-wrap: nowrap !important;
-                gap: 2px !important;
-            }
-            [data-testid="column"] {
-                padding: 0px 1px !important;
-                min-width: 0px !important;
-                overflow: hidden !important;
-            }
             p, span, div[data-testid="stMarkdownContainer"] p {
-                font-size: 0.7rem !important;
-                white-space: nowrap !important;
-                overflow: hidden !important;
-                text-overflow: ellipsis !important;
+                font-size: 0.75rem !important;
             }
             [data-testid="stButton"] button {
-                padding: 0px 2px !important;
-                font-size: 0.6rem !important;
-                height: 22px !important;
-                min-height: 18px !important;
+                padding: 0px 4px !important;
+                font-size: 0.7rem !important;
+                height: 24px !important;
+                min-height: 20px !important;
             }
             h3 {
-                font-size: 1.0rem !important;
+                font-size: 1.1rem !important;
             }
         }
     </style>
@@ -370,7 +357,11 @@ selected_team = st.radio("Select Team", team_list, index=default_team_idx, horiz
 
 def render_batters(title, player_ids, team_data):
     st.subheader(title)
-    cols = st.columns([1, 1.5, 3, 2, 2, 1, 1.5])
+    
+    # Adjusting proportional column widths for Batters
+    batter_col_ratios = [0.4, 1.2, 4.0, 1.2, 1.2, 0.8, 1.0]
+    
+    cols = st.columns(batter_col_ratios)
     cols[0].write("**#**")
     cols[1].write("**Pos (Bat)**")
     cols[2].write("**Name**")
@@ -390,7 +381,7 @@ def render_batters(title, player_ids, team_data):
         s_ops = float(season_stats.get('ops', 0))
         r_ops = float(recent_stats.get('ops', 0))
         
-        cols = st.columns([1, 1.5, 3, 2, 2, 1, 1.5])
+        cols = st.columns(batter_col_ratios)
         cols[0].write(str(i+1) if "Lineup" in title else "-")
         cols[1].write(f"{info['def_pos']} ({info['bat_side']})")
         cols[2].write(f"#{info['jersey']} {info['name']}")
@@ -484,7 +475,11 @@ def render_batters(title, player_ids, team_data):
 
 def render_pitchers(title, player_ids, team_data):
     st.subheader(title)
-    cols = st.columns([1.5, 3, 2, 2, 1, 1.5])
+    
+    # Adjusting proportional column widths for Pitchers
+    pitcher_col_ratios = [1.2, 4.0, 1.2, 1.2, 0.8, 1.0]
+    
+    cols = st.columns(pitcher_col_ratios)
     cols[0].write("**Pos (Throw)**")
     cols[1].write("**Name**")
     cols[2].write("**sERA**")
@@ -522,7 +517,7 @@ def render_pitchers(title, player_ids, team_data):
         s_era = float(season_stats.get('era', 0.00))
         r_era = float(recent_stats.get('era', 0.00))
         
-        cols = st.columns([1.5, 3, 2, 2, 1, 1.5])
+        cols = st.columns(pitcher_col_ratios)
         cols[0].write(f"{display_pos} ({info['pitch_hand']})")
         cols[1].write(f"#{info['jersey']} {info['name']}")
         cols[2].write(f"{s_era:.2f}")
