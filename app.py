@@ -8,7 +8,7 @@ import pandas as pd
 st.set_page_config(page_title="MLB Trend Tracker", layout="wide")
 CURRENT_SEASON = 2026 # Update this based on the current season
 
-# Custom CSS for vertical alignment, compact rows, and forcing horizontal mobile layout
+# Custom CSS for vertical alignment, compact rows, and responsive proportions
 st.markdown("""
     <style>
         /* Add clean separation between section titles and tables */
@@ -19,7 +19,7 @@ st.markdown("""
         /* Tighten horizontal blocks alignment and vertically center items */
         [data-testid="stHorizontalBlock"] {
             align-items: center !important;
-            gap: 0.4rem !important;
+            gap: 0.3rem !important;
             padding-top: 0px !important;
             padding-bottom: 0px !important;
         }
@@ -46,32 +46,32 @@ st.markdown("""
             margin-bottom: 0px !important;
         }
 
-        /* --- MOBILE RESPONSIVE TWEAKS (FORCING HORIZONTAL ROWS) --- */
+        /* --- MOBILE RESPONSIVE TWEAKS (PRESERVING PROPORTIONS) --- */
         @media (max-width: 768px) {
             [data-testid="stHorizontalBlock"] {
                 flex-direction: row !important;
                 flex-wrap: nowrap !important;
-                gap: 0.15rem !important;
+                gap: 2px !important;
             }
             [data-testid="column"] {
-                flex: 1 1 0% !important;
+                padding: 0px 1px !important;
                 min-width: 0px !important;
                 overflow: hidden !important;
             }
             p, span, div[data-testid="stMarkdownContainer"] p {
-                font-size: 0.72rem !important;
+                font-size: 0.7rem !important;
                 white-space: nowrap !important;
                 overflow: hidden !important;
                 text-overflow: ellipsis !important;
             }
             [data-testid="stButton"] button {
-                padding: 0px 4px !important;
-                font-size: 0.65rem !important;
-                height: 24px !important;
-                min-height: 20px !important;
+                padding: 0px 2px !important;
+                font-size: 0.6rem !important;
+                height: 22px !important;
+                min-height: 18px !important;
             }
             h3 {
-                font-size: 1.1rem !important;
+                font-size: 1.0rem !important;
             }
         }
     </style>
