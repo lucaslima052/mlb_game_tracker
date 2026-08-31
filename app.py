@@ -19,12 +19,12 @@ st.markdown("""
         
         /* --- FORCE HORIZONTAL SCROLL & RESPONSIVE RULES --- */
         .block-container {
-            padding-top: 1rem !important;
+            padding-top: 1.5rem !important;
             max-width: 100% !important;
         }
 
         h1 {
-            font-size: 2rem !important;
+            font-size: 1.5rem !important;
             margin-bottom: 0px !important;
         }
         
