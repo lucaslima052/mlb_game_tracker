@@ -8,7 +8,7 @@ import pandas as pd
 st.set_page_config(page_title="MLB Trend Tracker", layout="wide")
 CURRENT_SEASON = 2026 # Update this based on the current season
 
-# Custom CSS for absolute vertical centering between text and buttons
+# Custom CSS for absolute vertical centering and freezing table size below 768px
 st.markdown("""
     <style>
         /* Add clean separation between section titles and tables */
@@ -17,11 +17,30 @@ st.markdown("""
             margin-bottom: 8px !important;
         }
         
+        /* --- FREEZE TABLE SIZE FOR SMALL SCREENS --- */
+        /* Wrap your main content or table areas to lock minimum layout width at 768px */
+        .block-container {
+            max-width: 100% !important;
+        }
+        
+        /* Create a scrollable viewport container for tables on smaller screens */
+        @media (max-width: 768px) {
+            .stMainBlockContainer, [data-testid="stMainBlockContainer"] {
+                overflow-x: auto !important;
+            }
+        }
+
+        /* Force table blocks to maintain their desktop proportions */
+        div[data-testid="stVerticalBlock"] > div:has([data-testid="stHorizontalBlock"]) {
+            min-width: 768px !important;
+        }
+        
         /* Tighten horizontal blocks alignment */
         [data-testid="stHorizontalBlock"] {
             gap: 0.4rem !important;
             padding-top: 0px !important;
             padding-bottom: 0px !important;
+            min-width: 768px !important;
         }
 
         /* --- ABSOLUTE VERTICAL ALIGNMENT FIX FOR BUTTONS VS TEXT --- */
