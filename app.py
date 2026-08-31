@@ -8,7 +8,7 @@ import pandas as pd
 st.set_page_config(page_title="MLB Trend Tracker", layout="wide")
 CURRENT_SEASON = 2026 # Update this based on the current season
 
-# Custom CSS for vertical alignment and compact rows
+# Custom CSS for vertical alignment, compact rows, and mobile responsiveness
 st.markdown("""
     <style>
         /* Add clean separation between section titles and tables */
@@ -19,7 +19,7 @@ st.markdown("""
         /* Tighten horizontal blocks alignment and vertically center items */
         [data-testid="stHorizontalBlock"] {
             align-items: center !important;
-            gap: 0.5rem !important;
+            gap: 0.4rem !important;
             padding-top: 0px !important;
             padding-bottom: 0px !important;
         }
@@ -31,9 +31,10 @@ st.markdown("""
         }
         /* Make the Stats buttons compact to match text row height */
         [data-testid="stButton"] button {
-            padding: 0px 8px !important;
-            min-height: 24px !important;
-            height: 30px !important;
+            padding: 0px 6px !important;
+            min-height: 22px !important;
+            height: 28px !important;
+            font-size: 0.8rem !important;
         }
         /* Tighten divider spacing */
         hr {
@@ -43,6 +44,23 @@ st.markdown("""
         /* Compact text rendering */
         p {
             margin-bottom: 0px !important;
+        }
+
+        /* --- MOBILE RESPONSIVE TWEAKS --- */
+        @media (max-width: 768px) {
+            [data-testid="stHorizontalBlock"] {
+                gap: 0.2rem !important;
+            }
+            [data-testid="column"] {
+                min-width: 0px !important;
+                font-size: 0.8rem !important;
+            }
+            p, span, div[data-testid="stMarkdownContainer"] p {
+                font-size: 0.8rem !important;
+            }
+            h3 {
+                font-size: 1.1rem !important;
+            }
         }
     </style>
 """, unsafe_allow_html=True)
