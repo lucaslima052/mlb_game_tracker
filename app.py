@@ -258,10 +258,10 @@ def calculate_trailing_pitcher_stats(game_logs, limit_type, limit_val, target_da
 
 
 # --- UI: DIALOG MODAL (POPUP) ---
-@st.dialog("Complete Player Stats")
+@st.dialog("Complete Player Stats", width="large")
 def show_stats_dialog(player_name, df):
     st.write(f"### {player_name}")
-    st.dataframe(df, hide_index=True, use_container_width=True)
+    st.dataframe(df, hide_index=True)
 
 
 # --- UI: SIDEBAR ---
