@@ -17,24 +17,28 @@ st.markdown("""
             margin-bottom: 8px !important;
         }
         
-        /* --- FORCE HORIZONTAL SCROLL & PREVENT COLUMN WRAP ON MOBILE --- */
+        /* --- FORCE HORIZONTAL SCROLL & RESPONSIVE RULES --- */
         .block-container {
             max-width: 100% !important;
         }
         
-        /* Enable horizontal scrolling on the main container */
-        @media (max-width: 768px) {
+        /* Enable horizontal scrolling and apply mobile width restrictions below 768px */
+        @media (max-width: 640px) {
             .stMainBlockContainer, [data-testid="stMainBlockContainer"] {
                 overflow-x: auto !important;
             }
+            
+            [data-testid="stHorizontalBlock"] {
+                min-width: 100px !important;
+                max-width: 100px !important;
+            }
         }
 
-        /* Prevent Streamlit columns from stacking vertically on small screens */
+        /* Prevent Streamlit columns from stacking vertically on larger screens */
         [data-testid="stHorizontalBlock"] {
             display: flex !important;
             flex-direction: row !important;
             flex-wrap: nowrap !important;
-            min-width: 768px !important;
             gap: 0.4rem !important;
             padding-top: 0px !important;
             padding-bottom: 0px !important;
