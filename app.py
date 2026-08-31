@@ -13,14 +13,15 @@ st.markdown("""
     <style>
         /* Add clean separation between section titles and tables */
         h3 {
-            margin-top: 4px !important;
-            margin-bottom: 4px !important;
+            margin-top: 0px !important;
+            margin-bottom: -10px !important;
         }
         
         /* --- FORCE HORIZONTAL SCROLL & RESPONSIVE RULES --- */
         .block-container {
             padding-top: 1.5rem !important;
             max-width: 100% !important;
+            
         }
 
         h1 {
@@ -102,7 +103,7 @@ st.markdown("""
         /* Make the Stats buttons compact to match text row height */
         [data-testid="stButton"] button {
             padding: 0px 6px !important;
-            min-height: 20px !important;
+            min-height: 22px !important;
             height: 20px !important;
             font-size: 0.8rem !important;
             line-height: normal !important;
@@ -114,6 +115,12 @@ st.markdown("""
             margin-bottom: 4px !important;
             min-width: 530px !important
         }
+
+        div[data-testid="stRadio"] {
+            margin-top: -10px !important;
+            margin-bottom: -10px !important;
+        }
+        
     </style>
 """, unsafe_allow_html=True)
 
