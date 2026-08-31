@@ -8,7 +8,7 @@ import pandas as pd
 st.set_page_config(page_title="MLB Trend Tracker", layout="wide")
 CURRENT_SEASON = 2026 # Update this based on the current season
 
-# Custom CSS for vertical alignment, compact rows, and mobile responsiveness
+# Custom CSS for vertical alignment, compact rows, and forcing horizontal mobile layout
 st.markdown("""
     <style>
         /* Add clean separation between section titles and tables */
@@ -46,17 +46,29 @@ st.markdown("""
             margin-bottom: 0px !important;
         }
 
-        /* --- MOBILE RESPONSIVE TWEAKS --- */
+        /* --- MOBILE RESPONSIVE TWEAKS (FORCING HORIZONTAL ROWS) --- */
         @media (max-width: 768px) {
             [data-testid="stHorizontalBlock"] {
-                gap: 0.2rem !important;
+                flex-direction: row !important;
+                flex-wrap: nowrap !important;
+                gap: 0.15rem !important;
             }
             [data-testid="column"] {
+                flex: 1 1 0% !important;
                 min-width: 0px !important;
-                font-size: 0.8rem !important;
+                overflow: hidden !important;
             }
             p, span, div[data-testid="stMarkdownContainer"] p {
-                font-size: 0.8rem !important;
+                font-size: 0.72rem !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+            }
+            [data-testid="stButton"] button {
+                padding: 0px 4px !important;
+                font-size: 0.65rem !important;
+                height: 24px !important;
+                min-height: 20px !important;
             }
             h3 {
                 font-size: 1.1rem !important;
@@ -389,6 +401,8 @@ def render_batters(title, player_ids, team_data):
         s_ab = season_stats.get('atBats', 0)
         s_pa = season_stats.get('plateAppearances', 0)
         s_h = season_stats.get('hits', 0)
+        s_2b = season_stats.get('doubles', 0)
+        s_3b = season_stats.get('triples', 0)
         s_hr = season_stats.get('homeRuns', 0)
         s_bb = season_stats.get('baseOnBalls', 0)
         s_k = season_stats.get('strikeOuts', 0)
@@ -401,6 +415,8 @@ def render_batters(title, player_ids, team_data):
         r_ab = recent_stats.get('atBats', 0)
         r_pa = recent_stats.get('plateAppearances', 0)
         r_h = recent_stats.get('hits', 0)
+        r_2b = recent_stats.get('doubles', 0)
+        r_3b = recent_stats.get('triples', 0)
         r_hr = recent_stats.get('homeRuns', 0)
         r_bb = recent_stats.get('baseOnBalls', 0)
         r_k = recent_stats.get('strikeOuts', 0)
@@ -420,12 +436,13 @@ def render_batters(title, player_ids, team_data):
                 "SLG": fmt_rate(season_stats.get('slg', 0)),
                 "OPS": fmt_rate(s_ops),
                 "H": s_h,
-                "2B": season_stats.get('doubles', 0),
-                "3B": season_stats.get('triples', 0),
+                "2B": s_2b,
+                "3B": s_3b,
                 "HR": s_hr,
                 "BB": s_bb,
                 "K": s_k,
                 "HR %": fmt_pct(s_hr, s_pa),
+                "XBH %": fmt_pct(s_2b + s_3b + s_hr, s_pa),
                 "BB %": fmt_pct(s_bb, s_pa),
                 "K %": fmt_pct(s_k, s_pa),
                 "BABIP": fmt_rate(s_babip),
@@ -444,12 +461,13 @@ def render_batters(title, player_ids, team_data):
                 "SLG": fmt_rate(recent_stats.get('slg', 0)),
                 "OPS": fmt_rate(r_ops),
                 "H": r_h,
-                "2B": recent_stats.get('doubles', 0),
-                "3B": recent_stats.get('triples', 0),
+                "2B": r_2b,
+                "3B": r_3b,
                 "HR": r_hr,
                 "BB": r_bb,
                 "K": r_k,
                 "HR %": fmt_pct(r_hr, r_pa),
+                "XBH %": fmt_pct(r_2b + r_3b + r_hr, r_pa),
                 "BB %": fmt_pct(r_bb, r_pa),
                 "K %": fmt_pct(r_k, r_pa),
                 "BABIP": fmt_rate(r_babip),
@@ -514,6 +532,8 @@ def render_pitchers(title, player_ids, team_data):
         s_outs = ip_to_outs(season_stats.get('inningsPitched', '0.0'))
         s_ip_calc = s_outs / 3.0
         s_h = season_stats.get('hits', 0)
+        s_2b = season_stats.get('doubles', 0)
+        s_3b = season_stats.get('triples', 0)
         s_hr = season_stats.get('homeRuns', 0)
         s_bb = season_stats.get('baseOnBalls', 0)
         s_hbp = season_stats.get('hitByPitch', 0) or season_stats.get('hitBatsmen', 0)
@@ -530,6 +550,8 @@ def render_pitchers(title, player_ids, team_data):
         r_outs = ip_to_outs(recent_stats.get('inningsPitched', '0.0'))
         r_ip_calc = r_outs / 3.0
         r_h = recent_stats.get('hits', 0)
+        r_2b = recent_stats.get('doubles', 0)
+        r_3b = recent_stats.get('triples', 0)
         r_hr = recent_stats.get('homeRuns', 0)
         r_bb = recent_stats.get('baseOnBalls', 0)
         r_hbp = recent_stats.get('hitByPitch', 0)
@@ -558,11 +580,14 @@ def render_pitchers(title, player_ids, team_data):
                 "ER": season_stats.get('earnedRuns', 0),
                 "R": season_stats.get('runs', 0),
                 "H": s_h,
+                "2B": s_2b,
+                "3B": s_3b,
                 "HR": s_hr,
                 "BB": s_bb,
                 "K": s_k,
                 "HBP": s_hbp,
                 "HR %": fmt_pct(s_hr, s_bf),
+                "XBH %": fmt_pct(s_2b + s_3b + s_hr, s_bf),
                 "BB %": fmt_pct(s_bb, s_bf),
                 "K %": fmt_pct(s_k, s_bf),
                 "WHIP": f"{s_whip:.2f}",
@@ -582,11 +607,14 @@ def render_pitchers(title, player_ids, team_data):
                 "ER": recent_stats.get('earnedRuns', 0),
                 "R": recent_stats.get('runs', 0),
                 "H": r_h,
+                "2B": r_2b,
+                "3B": r_3b,
                 "HR": r_hr,
                 "BB": r_bb,
                 "K": r_k,
                 "HBP": r_hbp,
                 "HR %": fmt_pct(r_hr, r_bf),
+                "XBH %": fmt_pct(r_2b + r_3b + r_hr, r_bf),
                 "BB %": fmt_pct(r_bb, r_bf),
                 "K %": fmt_pct(r_k, r_bf),
                 "WHIP": f"{r_whip:.2f}",
