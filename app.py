@@ -13,7 +13,7 @@ st.markdown("""
     <style>
         /* Add clean separation between section titles and tables */
         h3 {
-            margin-top: 20px !important;
+            margin-top: 8px !important;
             margin-bottom: 8px !important;
         }
         
@@ -696,6 +696,10 @@ def get_bullpen_sort_key(pid, team_dict):
     return (role_val, era)
 
 def render_team_tab(team_dict):
+
+    
+    st.caption("sOPS = Season OPS; rOPS = Recent OPS")
+    
     batting_order = team_dict.get('battingOrder', [])
     bench = team_dict.get('bench', [])
     all_batters = team_dict.get('batters', [])
@@ -727,8 +731,10 @@ def render_team_tab(team_dict):
     if batters_left_game:
         render_batters("Batters - Left Game", batters_left_game, team_dict)
     
-    st.caption("sOPS = Season OPS; rOPS = Recent OPS")
+#    st.caption("sOPS = Season OPS; rOPS = Recent OPS")
     st.write("")
+
+    st.caption("sERA = Season ERA; rERA = Recent ERA")
         
     render_pitchers("Current Pitcher", current_pitcher, team_dict)
     
@@ -740,7 +746,7 @@ def render_team_tab(team_dict):
     if pitchers_left_game:
         render_pitchers("Pitchers - Left Game", pitchers_left_game, team_dict)
 
-    st.caption("sERA = Season ERA; rERA = Recent ERA")
+#    st.caption("sERA = Season ERA; rERA = Recent ERA")
 
 if selected_team == away_team:
     render_team_tab(boxscore['away'])
