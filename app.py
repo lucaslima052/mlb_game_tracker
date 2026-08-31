@@ -95,6 +95,8 @@ st.markdown("""
             display: flex;
             align-items: center;
             height: 100%;
+            margin-top: 0px !important;
+            margin-bottom: -20px !important;
         }
 
         /* Make the Stats buttons compact to match text row height */
