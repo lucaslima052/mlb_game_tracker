@@ -13,13 +13,18 @@ st.markdown("""
     <style>
         /* Add clean separation between section titles and tables */
         h3 {
-            margin-top: 8px !important;
-            margin-bottom: 8px !important;
+            margin-top: 4px !important;
+            margin-bottom: 4px !important;
         }
         
         /* --- FORCE HORIZONTAL SCROLL & RESPONSIVE RULES --- */
         .block-container {
             max-width: 100% !important;
+        }
+
+        h1 {
+            font-size: 2rem !important;
+            margin-bottom: 0px !important;
         }
         
         /* Rules applied ONLY when screen width is less than 768px */
@@ -34,17 +39,23 @@ st.markdown("""
                 max-width: 100px !important;
             }*/
 
-            .stMainBlockContainer [data-testid="stHorizontalBlock"] > div:not(:nth-child(2)) {
-                flex: 0 0 70px !important;
-                min-width: 70px !important;
-                max-width: 70px !important;
-                width: 70px !important;
+            .stMainBlockContainer [data-testid="stHorizontalBlock"] > div:not(:nth-child(2))  {
+                flex: 0 0 45px !important;
+                min-width: 45px !important;
+                max-width: 45px !important;
+                width: 45px !important;
             }
             .stMainBlockContainer [data-testid="stHorizontalBlock"] > div:nth-child(2) {
                 flex: 0 0 170px !important;
                 min-width: 70px !important;
                 max-width: 170px !important;
                 width: 170px !important;
+            }
+            .stMainBlockContainer [data-testid="stHorizontalBlock"] > div:nth-child(1) {
+                flex: 0 0 67px !important;
+                min-width: 67px !important;
+                max-width: 67px !important;
+                width: 67px !important;
             }
         }
 
@@ -75,7 +86,7 @@ st.markdown("""
         p, div[data-testid="stMarkdownContainer"] > p {
             margin-top: 0px !important;
             margin-bottom: 0px !important;
-            line-height: 1.2 !important;
+            line-height: 1.0 !important;
         }
 
         /* Force button wrapper to match text alignment baseline */
@@ -88,8 +99,8 @@ st.markdown("""
         /* Make the Stats buttons compact to match text row height */
         [data-testid="stButton"] button {
             padding: 0px 6px !important;
-            min-height: 22px !important;
-            height: 28px !important;
+            min-height: 20px !important;
+            height: 20px !important;
             font-size: 0.8rem !important;
             line-height: normal !important;
         }
@@ -381,7 +392,7 @@ def get_player_info(team_dict, player_id):
 
 
 # --- UI: MAIN APP ---
-st.title(f"Game Tracker: {selected_game_name}")
+st.title(f"{selected_game_name} - {selected_date}")
 
 away_team, home_team = selected_game_name.split(" @ ")
 team_list = [away_team, home_team]
