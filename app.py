@@ -19,6 +19,7 @@ st.markdown("""
         
         /* --- FORCE HORIZONTAL SCROLL & RESPONSIVE RULES --- */
         .block-container {
+            padding-top: 1rem !important;
             max-width: 100% !important;
         }
 
