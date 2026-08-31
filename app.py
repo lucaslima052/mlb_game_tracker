@@ -22,15 +22,29 @@ st.markdown("""
             max-width: 100% !important;
         }
         
-        /* Enable horizontal scrolling and apply mobile width restrictions below 768px */
+        /* Rules applied ONLY when screen width is less than 768px */
         @media (max-width: 640px) {
             .stMainBlockContainer, [data-testid="stMainBlockContainer"] {
                 overflow-x: auto !important;
+                max-width: 640px !important;
             }
             
-            [data-testid="stHorizontalBlock"] {
-                min-width: 100px !important;
+/*            [data-testid="stHorizontalBlock"] {
+                min-width: 50px !important;
                 max-width: 100px !important;
+            }*/
+
+            .stMainBlockContainer [data-testid="stHorizontalBlock"] > div:not(:nth-child(2)) {
+                flex: 0 0 70px !important;
+                min-width: 70px !important;
+                max-width: 70px !important;
+                width: 70px !important;
+            }
+            .stMainBlockContainer [data-testid="stHorizontalBlock"] > div:nth-child(2) {
+                flex: 0 0 170px !important;
+                min-width: 70px !important;
+                max-width: 170px !important;
+                width: 170px !important;
             }
         }
 
@@ -44,10 +58,10 @@ st.markdown("""
             padding-bottom: 0px !important;
         }
 
-        /* Prevent individual columns from collapsing or auto-widthing */
+        /* Default rule for all columns */
         [data-testid="column"] {
             flex: 1 0 auto !important;
-            min-width: fit-content !important;
+            min-width: 60px !important;
             display: flex;
             align-items: center;
         }
@@ -382,15 +396,17 @@ selected_team = st.radio("Select Team", team_list, index=default_team_idx, horiz
 def render_batters(title, player_ids, team_data):
     st.subheader(title)
     
-    batter_col_ratios = [0.3, 0.6, 1.4, 0.6, 0.6, 0.6, 0.6]
+    batter_col_ratios = [1, 2, 1, 1, 1, 1]
+#    batter_col_ratios = [0.3, 0.6, 1.4, 0.6, 0.6, 0.6, 0.6]
     
     cols = st.columns(batter_col_ratios, vertical_alignment="center")
-    cols[0].write("**#**")
-    cols[1].write("**Pos (Bat)**")
-    cols[2].write("**Name**")
-    cols[3].write("**sOPS**")
-    cols[4].write("**rOPS**")
-    cols[5].write("**Trend**")
+#    cols[0].write("**#**")
+    cols[0].write("**Pos (Bat)**")
+#    cols[1].write("**Pos (Bat)**")
+    cols[1].write("**Name**")
+    cols[2].write("**sOPS**")
+    cols[3].write("**rOPS**")
+    cols[4].write("**Trend**")
     st.divider()
 
     for i, pid in enumerate(player_ids):
@@ -405,12 +421,13 @@ def render_batters(title, player_ids, team_data):
         r_ops = float(recent_stats.get('ops', 0))
         
         cols = st.columns(batter_col_ratios, vertical_alignment="center")
-        cols[0].write(str(i+1) if "Lineup" in title else "-")
-        cols[1].write(f"{info['def_pos']} ({info['bat_side']})")
-        cols[2].write(f"#{info['jersey']} {info['name']}")
-        cols[3].write(fmt_rate(s_ops))
-        cols[4].write(fmt_rate(r_ops))
-        cols[5].write(calculate_batter_trend(s_ops, r_ops))
+        cols[0].write(str(i+1)+f" | {info['def_pos']} ({info['bat_side']})" if "Lineup" in title else f"{info['def_pos']} ({info['bat_side']})")
+#        cols[1].write(f"{info['def_pos']} ({info['bat_side']})")
+#        cols[2].write(f"#{info['jersey']} {info['name']}")
+        cols[1].markdown(f'<div class="mobile-name-col">#{info["jersey"]} {info["name"]}</div>', unsafe_allow_html=True)
+        cols[2].write(fmt_rate(s_ops))
+        cols[3].write(fmt_rate(r_ops))
+        cols[4].write(calculate_batter_trend(s_ops, r_ops))
         
         s_ab = season_stats.get('atBats', 0)
         s_pa = season_stats.get('plateAppearances', 0)
@@ -493,16 +510,17 @@ def render_batters(title, player_ids, team_data):
             }
         ])
         
-        if cols[6].button("Stats", key=f"btn_bat_{pid}_{title}"):
+        if cols[5].button("Stats", key=f"btn_bat_{pid}_{title}"):
             show_stats_dialog(f"#{info['jersey']} {info['name']}", df)
 
 def render_pitchers(title, player_ids, team_data):
     st.subheader(title)
-    
-    pitcher_col_ratios = [1.2, 2.2, 1.0, 1.0, 0.8, 1.0]
+
+    pitcher_col_ratios = [1.0, 2.0, 1.0, 1.0, 1.0, 1.0]    
+#    pitcher_col_ratios = [1.2, 2.2, 1.0, 1.0, 0.8, 1.0]
     
     cols = st.columns(pitcher_col_ratios, vertical_alignment="center")
-    cols[0].write("**Pos (Throw)**")
+    cols[0].write("**Pos (Thr.)**")
     cols[1].write("**Name**")
     cols[2].write("**sERA**")
     cols[3].write("**rERA**")
@@ -541,7 +559,8 @@ def render_pitchers(title, player_ids, team_data):
         
         cols = st.columns(pitcher_col_ratios, vertical_alignment="center")
         cols[0].write(f"{display_pos} ({info['pitch_hand']})")
-        cols[1].write(f"#{info['jersey']} {info['name']}")
+#        cols[1].write(f"#{info['jersey']} {info['name']}")
+        cols[1].markdown(f'<div class="mobile-name-col">#{info["jersey"]} {info["name"]}</div>', unsafe_allow_html=True)
         cols[2].write(f"{s_era:.2f}")
         cols[3].write(f"{r_era:.2f}")
         cols[4].write(calculate_pitcher_trend(s_era, r_era))
